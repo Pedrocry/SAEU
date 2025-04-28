@@ -9,5 +9,4 @@ onde esse sistema supra alguma nescessidade.
 
 Colaboradores: 
 João pedro lima de souza <pedroguin2022@gmail.com>
-
-Rodrigo teles <email>
+Rodrigo Teles de França Brito <rodrigo.teles85@gmail.com>
