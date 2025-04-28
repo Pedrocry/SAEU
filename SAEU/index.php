@@ -50,7 +50,7 @@
         }
     </style>
 </head>
-<body>
+<body class="fundo">
     <div class="container">
         <h1>Bem-vindo ao Sistema de Arquivos Escolar</h1>
         <p>Selecione uma das opções abaixo:</p>

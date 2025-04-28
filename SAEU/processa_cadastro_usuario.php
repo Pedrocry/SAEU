@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmt_insert->execute()) {
                     $usuario_id = $pdo->lastInsertId(); // Obtém o ID do usuário recém-inserido
                     $nome_sanitized = sanitizeFolderName($nome);
-                    $user_folder = $base_path . $nome_sanitized . '_' . $usuario_id . '/'; // Inclui nome e ID
+                    $user_folder = $base_path.$usuario_id; // Inclui nome e ID
 
                     if (!is_dir($user_folder)) {
                         if (mkdir($user_folder, 0755, true)) {
