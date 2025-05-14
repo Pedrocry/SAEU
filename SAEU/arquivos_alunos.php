@@ -20,11 +20,14 @@ function sanitizeFolderName($string) {
 // Processamento de Upload de Arquivos
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
     $arquivo = $_FILES['arquivo'];
-    $nome_original = $arquivo['name'];
+    $nome = $arquivo['name'];
     $tipo = $arquivo['type'];
     $tamanho = $arquivo['size'];
+    $disciplina=$_POST['disciplina_nome'];
+    //$disciplina_nome=$_POST['disciplina_nome'];
     $erro = $arquivo['error'];
     $tmp_name = $arquivo['tmp_name'];
+    $nome_original="(".$disciplina.")-".$nome;
 
     if ($erro === UPLOAD_ERR_OK) {
         $nome_sanitized = sanitizeFolderName($_SESSION['usuario_nome']);
@@ -39,12 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
 
         if (move_uploaded_file($tmp_name, $caminho_servidor)) {
             try {
-                $stmt = $pdo->prepare("INSERT INTO arquivos (id_usuario, nome_original, nome_servidor, tipo, tamanho) VALUES (:id_usuario, :nome_original, :nome_servidor, :tipo, :tamanho)");
+                $stmt = $pdo->prepare("INSERT INTO arquivos (id_usuario, nome_original, nome_servidor, tipo, tamanho,disciplina) VALUES (:id_usuario, :nome_original, :nome_servidor, :tipo, :tamanho,:disciplina)");
                 $stmt->bindParam(':id_usuario', $usuario_id, PDO::PARAM_INT);
                 $stmt->bindParam(':nome_original', $nome_original, PDO::PARAM_STR);
                 $stmt->bindParam(':nome_servidor', $nome_servidor, PDO::PARAM_STR);
                 $stmt->bindParam(':tipo', $tipo, PDO::PARAM_STR);
                 $stmt->bindParam(':tamanho', $tamanho, PDO::PARAM_INT);
+                $stmt->bindParam(':disciplina', $disciplina, PDO::PARAM_STR);
                 $stmt->execute();
                 $mensagem_upload = "Arquivo enviado com sucesso!";
             } catch (PDOException $e) {
@@ -61,15 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
     }
 }
 
+
 // Listar arquivos do usuário
-try {
-    $stmt_arquivos = $pdo->prepare("SELECT id, nome_original, nome_servidor, tamanho, data_upload FROM arquivos WHERE id_usuario = :id_usuario ORDER BY data_upload DESC");
+@$disciplina = $_POST['disciplina_nome_nome'];
+    //$disciplina="AUTO-CAD";
+    $stmt_arquivos = $pdo->prepare("SELECT id, nome_original, nome_servidor, tamanho, data_upload FROM arquivos WHERE id_usuario = :id_usuario AND disciplina= :disciplina ORDER BY disciplina DESC"); // data_upload
     $stmt_arquivos->bindParam(':id_usuario', $usuario_id, PDO::PARAM_INT);
+    $stmt_arquivos->bindParam(':disciplina', $disciplina, PDO::PARAM_STR);   
+   // $stmt_arquivos->bindParam(':disciplina', $dic, PDO::PARAM_STR);
     $stmt_arquivos->execute();
     $arquivos = $stmt_arquivos->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $erro_listar_arquivos = "Erro ao listar seus arquivos: " . $e->getMessage();
-}
 ?>
 
 <!DOCTYPE html>
@@ -85,6 +90,8 @@ try {
         <div class="titulo"><h1>Meus Arquivos </h1> <p><a href="logout.php">Sair</a></p></div>
         <p> <b>Bem-vindo(a),</b> <?php echo htmlspecialchars($_SESSION['usuario_nome']); ?> (Turma: <?php echo htmlspecialchars($_SESSION['turma_nome']); ?>)!</p>
 
+
+
         <h2>Upload de Arquivo</h2>
         <?php if (isset($erro_upload)): ?>
             <p class="error"><?php echo $erro_upload; ?></p>
@@ -96,11 +103,69 @@ try {
             <div class="form-group">
                 <label for="arquivo">Selecionar Arquivo:</label>
                 <input type="file" name="arquivo" id="arquivo" required>
+
+            <?php
+            $turma_nome=$_SESSION['turma_nome'];
+            // $id=28;
+            //echo $turma_nome;
+            
+            ?> 
+                    <?php
+                                    try {
+    // Prepara a consulta SQL com o placeholder :id
+    $stmt = $pdo->prepare("SELECT disciplina01, disciplina02, disciplina03 FROM turmas WHERE nome = :nome");
+
+    // Vincula o valor da variável $id ao placeholder :id
+    $stmt->bindParam(':nome', $turma_nome, PDO::PARAM_STR);
+
+    // Executa a consulta preparada
+    $stmt->execute();
+
+    // Obtém a primeira (e provavelmente única) linha de resultado como um array associativo
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Verifica se alguma turma foi encontrada
+    if ($row) {
+        ?>
+        <select name="disciplina_nome">
+            <option value="<?php echo $row['disciplina01']; ?>"><?php echo htmlspecialchars($row['disciplina01']); ?></option>
+            <option value="<?php echo $row['disciplina02']; ?>"><?php echo htmlspecialchars($row['disciplina02']); ?></option>
+            <option value="<?php echo $row['disciplina03']; ?>"><?php echo htmlspecialchars($row['disciplina03']); ?></option>
+        </select>
+        <?php
+    } else {
+        echo "<p>Nenhuma turma encontrada com o ID especificado.</p>";
+    }
+
+} catch (PDOException $e) {
+    echo "Erro: " . $e->getMessage();
+}
+
+?>
+
             </div>
             <button type="submit" class="button">Enviar Arquivo</button>
         </form>
 
         <h2>Seus Arquivos</h2>
+
+                    <?php
+            $turma_nome=$_SESSION['turma_nome'];
+            // $id=28;
+            //echo $turma_nome;
+            
+            ?> 
+
+ <form action="" method="POST" enctype="multipart/form-data">
+        <select name="disciplina_nome_nome">
+            <option value="<?php echo $row['disciplina01']; ?>"><?php echo htmlspecialchars($row['disciplina01']); ?></option>
+            <option value="<?php echo $row['disciplina02']; ?>"><?php echo htmlspecialchars($row['disciplina02']); ?></option>
+            <option value="<?php echo $row['disciplina03']; ?>"><?php echo htmlspecialchars($row['disciplina03']); ?></option>
+        </select>
+
+        <button type="submit" class="button">Selecionar por diciplina</button>
+        </form>
+ 
         <?php if (isset($erro_listar_arquivos)): ?>
             <p class="error"><?php echo $erro_listar_arquivos; ?></p>
         <?php endif; ?>
@@ -117,6 +182,7 @@ try {
         <tbody>
             <?php foreach ($arquivos as $arquivo): ?>
                 <tr>
+                    
                     <td><?php echo htmlspecialchars($arquivo['nome_original']); ?></td>
                     <td class="file-size" data-bytes="<?php echo $arquivo['tamanho']; ?>"></td>
                     <td><?php echo date('d/m/Y H:i:s', strtotime($arquivo['data_upload'])); ?></td>

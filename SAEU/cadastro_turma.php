@@ -77,7 +77,19 @@
                 <div class="form-group">
                     <label for="nome">Nome da Turma:</label>
                     <input type="text" id="nome" name="nome" required>
+
+                     <label for="disciplina01">Disciplina 01:</label>
+                     <input type="text" id="disciplina01" name="disciplina01" >
+
+                      <label for="disciplina02">Disciplina 02</label>
+                      <input type="text" id="disciplina02" name="disciplina02" >
+
+                       <label for="disciplina03">Disciplina 03</label>
+                       <input type="text" id="disciplina03" name="disciplina03" >
                 </div>
+
+
+
                 <div class="form-group">
                     <label for="descricao">Descrição (opcional):</label>
                     <textarea id="descricao" name="descricao"></textarea>
