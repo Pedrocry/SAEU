@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
                     <?php
                                     try {
     // Prepara a consulta SQL com o placeholder :id
-    $stmt = $pdo->prepare("SELECT disciplina01, disciplina02, disciplina03 FROM turmas WHERE nome = :nome");
+    $stmt = $pdo->prepare("SELECT * FROM turmas WHERE nome = :nome");
 
     // Vincula o valor da variável $id ao placeholder :id
     $stmt->bindParam(':nome', $turma_nome, PDO::PARAM_STR);
@@ -126,11 +126,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
 
     // Verifica se alguma turma foi encontrada
     if ($row) {
+
         ?>
         <select name="disciplina_nome">
+
+
             <option value="<?php echo $row['disciplina01']; ?>"><?php echo htmlspecialchars($row['disciplina01']); ?></option>
             <option value="<?php echo $row['disciplina02']; ?>"><?php echo htmlspecialchars($row['disciplina02']); ?></option>
             <option value="<?php echo $row['disciplina03']; ?>"><?php echo htmlspecialchars($row['disciplina03']); ?></option>
+            <option value="<?php echo $row['disciplina04']; ?>"><?php echo htmlspecialchars($row['disciplina04']); ?></option>
+            <option value="<?php echo $row['disciplina05']; ?>"><?php echo htmlspecialchars($row['disciplina05']); ?></option>
+            <option value="<?php echo $row['disciplina06']; ?>"><?php echo htmlspecialchars($row['disciplina06']); ?></option>
         </select>
         <?php
     } else {
@@ -158,9 +164,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
 
  <form action="" method="POST" enctype="multipart/form-data">
         <select name="disciplina_nome_nome">
+
+            <?php
+            for ($i=0; $i < 5; $i++) { 
+                $teste=$row['disciplina0'];
+                echo "<option value='".$teste."'>".$row['disciplina01']."</option>";
+            }
+            
+            ?>
             <option value="<?php echo $row['disciplina01']; ?>"><?php echo htmlspecialchars($row['disciplina01']); ?></option>
             <option value="<?php echo $row['disciplina02']; ?>"><?php echo htmlspecialchars($row['disciplina02']); ?></option>
             <option value="<?php echo $row['disciplina03']; ?>"><?php echo htmlspecialchars($row['disciplina03']); ?></option>
+            <option value="<?php echo $row['disciplina04']; ?>"><?php echo htmlspecialchars($row['disciplina04']); ?></option>
+            <option value="<?php echo $row['disciplina05']; ?>"><?php echo htmlspecialchars($row['disciplina05']); ?></option>
+            <option value="<?php echo $row['disciplina06']; ?>"><?php echo htmlspecialchars($row['disciplina06']); ?></option>
         </select>
 
         <button type="submit" class="button">Selecionar por diciplina</button>

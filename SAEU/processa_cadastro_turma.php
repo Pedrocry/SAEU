@@ -16,12 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['erro_cadastro_turma'] = "O nome da turma é obrigatório.";
     } else {
         try {
-            $stmt = $pdo->prepare("INSERT INTO turmas (nome, descricao, disciplina01, disciplina02, disciplina03) VALUES (:nome, :descricao, :disciplina01, :disciplina02, :disciplina03)");
+            $stmt = $pdo->prepare("INSERT INTO turmas (nome, descricao, disciplina01, disciplina02, disciplina03,disciplina04,disciplina05, disciplina06) VALUES (:nome, :descricao, :disciplina01, :disciplina02,:disciplina03, :disciplina04,:disciplina05,:disciplina06)");
             $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
             
             $stmt->bindParam(':disciplina01', $disciplina01, PDO::PARAM_STR);
             $stmt->bindParam(':disciplina02', $disciplina02, PDO::PARAM_STR);
             $stmt->bindParam(':disciplina03', $disciplina03, PDO::PARAM_STR);
+            $stmt->bindParam(':disciplina04', $disciplina03, PDO::PARAM_STR);
+            $stmt->bindParam(':disciplina05', $disciplina03, PDO::PARAM_STR);
+            $stmt->bindParam(':disciplina06', $disciplina03, PDO::PARAM_STR);
+
             $stmt->bindParam(':descricao', $descricao, PDO::PARAM_STR);
 
             $stmt->execute();

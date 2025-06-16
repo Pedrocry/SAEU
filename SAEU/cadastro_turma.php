@@ -86,6 +86,15 @@
 
                        <label for="disciplina03">Disciplina 03</label>
                        <input type="text" id="disciplina03" name="disciplina03" >
+
+                        <label for="disciplina03">Disciplina 04</label>
+                       <input type="text" id="disciplina03" name="disciplina03" >
+
+                        <label for="disciplina03">Disciplina 05</label>
+                       <input type="text" id="disciplina03" name="disciplina03" >
+
+                        <label for="disciplina03">Disciplina 06</label>
+                       <input type="text" id="disciplina03" name="disciplina03" >
                 </div>
 
 
